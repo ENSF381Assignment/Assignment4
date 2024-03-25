@@ -10,6 +10,7 @@ const reviews = [ {
     productName: "Product C",
     customerName: "Alice Johnson", reviewContent: "Satisfied with the purchase.", stars: 4
 }, {
-    productName: "Product A", customerName: "Bob Brown", reviewContent: "Could be better.", stars: 3
+    productName: "Product A",
+    customerName: "Bob Brown", reviewContent: "Could be better.", stars: 3
 } ];
 export default reviews;
