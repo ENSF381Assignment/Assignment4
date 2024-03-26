@@ -1,90 +1,60 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import products from "../data/products";
-
-const Navigation = () => {
-    return (
-        <nav className="navigation">
-            <Link to="/">Home</Link>
-            <Link to="/products">Products</Link>
-            <Link to="/login">Login</Link>
-        </nav>
-    );
-};
-
-const Header = () => {
-    return (
-        <div>
-            <div><img src="/images/logo.png" alt="logo" width="5%"/></div>
-            <Navigation />
-        </div>
-    );
-};
-
-function ProductItem({product}) {
-    const [showDescription, setShowDescription] = useState(false);
-
-    const handleOnMouseEnter = () => {
-        setShowDescription(true);
-    };
-
-    const handleOnMouseLeave = () => {
-        setShowDescription(false);
-    };
-
-    const handleAddToCart = () => {
-
-    }
-
-    return(
-        <div onMouseEnter={handleOnMouseEnter} onMouseLeave={handleOnMouseLeave}>
-            <img> src={product.image}</img>
-            <h3>{product.name}</h3>
-            {showDescription && <p>{product.description}</p>}
-            <p>{product.price}</p>
-            <button onClick={handleAddToCart}>Add to cart</button>
-        </div>
-    );
-};
-
-function ProductList() {
-    return(
-        <div>
-            {products.map(product => (
-                <ProductItem key={product.id} product={product} />
-            ))}
-        </div>
-    );
-};
-
-function CartItem() {
-    return(
-        <div>
-            
-        </div>
-    );
-};
-
-function Cart() {
-    return(
-        <div>
-
-        </div>
-    );
-};
-
-const Footer = () => {
-    return <span>© 2024 E-commerce. All rights reserved.</span>;
-};
+import React, { useState, useEffect } from 'react';
+import Header from './header';
+import ProductList from './ProductList';
+import Cart from './Cart';
+import Footer from './footer';
 
 const Productpage = () => {
-    return(
-        <div className="product-page">
+    const [cart, setCart] = useState([]);
+
+    useEffect(() => {
+        const savedCart = localStorage.getItem('cart');
+        if (savedCart) {
+            setCart(JSON.parse(savedCart));
+        }
+    }, []);
+
+    useEffect(() => {
+        localStorage.setItem('cart', JSON.stringify(cart));
+    }, [cart]);
+
+    const addToCart = (product) => {
+        const existingItem = cart.find(item => item.id === product.id);
+        if (existingItem) {
+            const updatedCart = cart.map(item => {
+                if (item.id === product.id) {
+                    return {...item, quantity: item.quantity + 1};
+                }
+                return item;
+            });
+            setCart(updatedCart);
+        } else {
+            setCart([...cart, {...product, quantity: 1}]);
+        }
+    };
+
+    const removeFromCart = (productId) => {
+        const updatedCart = [...cart];
+        const existingItemIndex = updatedCart.findIndex(item => item.id === productId);
+    
+        if (existingItemIndex !== -1) {
+          if (updatedCart[existingItemIndex].quantity > 1) {
+            updatedCart[existingItemIndex].quantity -= 1;
+          } else {
+            updatedCart.splice(existingItemIndex, 1);
+          }
+          setCart(updatedCart);
+        }
+      };
+
+
+    return (
+        <div className="content">
             <Header />
-            <table>
+            <table style={{width:'100%'}}>
                 <tr>
-                    <td><ProductList /></td>
-                    <td style={{verticalAlgin:'top'}}><Cart /></td>
+                    <td style={{width: '70%'}}><ProductList addToCart={addToCart} /></td>
+                    <td style={{width: '30%', verticalAlign:'top'}}><Cart cart={cart} removeFromCart={removeFromCart}/></td>
                 </tr>
             </table>
             <Footer />
