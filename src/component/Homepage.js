@@ -6,7 +6,7 @@ const Navigation = () => {
     return (
         <nav className="navigation">
             <Link to="/">Home</Link>
-            <Link to="/products">Products</Link>
+            <Link to="/Productpage">Products</Link>
             <Link to="/login">Login</Link>
         </nav>
     );
@@ -41,7 +41,7 @@ const HomeMainSection = () => {
         <div>
             <h1>About us</h1>
             <p>Welcome to our online store! We are passionate about providing high-quality products and exceptional customer service. Learn more about our story and commitment to your satisfaction.</p><br/>
-            <button><Link to="/products" style={{textDecoration: 'none'}}>Shop Now</Link></button>
+            <button><Link to="/Productpage" style={{textDecoration: 'none'}}>Shop Now</Link></button>
             <h1>Customer Reviews</h1>
             <CustomerReviews/>
         </div>
